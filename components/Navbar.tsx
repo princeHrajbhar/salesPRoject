@@ -1,30 +1,38 @@
 "use client";
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 const Navbar = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState<{ name: string; email: string } | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     // Check for token in local storage
     const token = localStorage.getItem('token');
     if (token) {
       setIsAuthenticated(true);
-      const userData = localStorage.getItem('user');
-      if (userData) {
-        setUser(JSON.parse(userData));
-      }
     }
   }, []);
 
-  const handleLogout = () => {
-    // Remove token and user data from local storage
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    setIsAuthenticated(false);
-    setUser(null);
-    // Optionally redirect to home or login
+  const handleLogout = async () => {
+    // Call the logout API to clear the token from cookies
+    try {
+      await fetch('/api/logout', {
+        method: 'POST',
+      });
+
+      // Remove token from local storage
+      localStorage.removeItem('token');
+
+      // Update state
+      setIsAuthenticated(false);
+
+      // Redirect to login page
+      router.push('/login');
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
   };
 
   return (
@@ -40,9 +48,6 @@ const Navbar = () => {
 
           {isAuthenticated ? (
             <>
-              <div className="text-white mr-4">
-                Welcome, {user?.name}
-              </div>
               <Link href="/profile" className="text-white mr-4">Profile</Link>
               <button onClick={handleLogout} className="text-white">
                 Logout
