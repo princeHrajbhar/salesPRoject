@@ -5,39 +5,53 @@ import { jwtVerify, JWTPayload } from 'jose'; // Using jose for JWT verification
 export async function middleware(req: NextRequest) {
   const token = req.cookies.get('token')?.value; // Get the token from cookies
   
-  console.log("Token in middleware:", token); // Debugging log for token
-
-  // If the request is for a protected page and there's no token
-  if (req.nextUrl.pathname === '/profile' && !token) {
-    console.log('Redirecting to login, no token found.');
-    return NextResponse.redirect(new URL('/login', req.url)); // Redirect to login if no token
+  // Log token for debugging (only do this in non-production environments for security reasons)
+  if (process.env.NODE_ENV !== 'production') {
+    console.log("Token in middleware:", token); 
   }
 
+  // If no token exists and the route is protected, redirect to login
+  if (req.nextUrl.pathname === '/profile' && !token) {
+    console.log('Redirecting to login, no token found.');
+    return NextResponse.redirect(new URL('/login', req.url));
+  }
+
+  // If token exists, verify it
   if (token) {
     try {
-      // Verifying the token using jose library
-      const secret = new TextEncoder().encode(process.env.JWT_SECRET!); // Encoding the JWT secret
-      const { payload }: { payload: JWTPayload } = await jwtVerify(token, secret); // Verifies and decodes the token payload
-
-      console.log("Token is valid, payload:", payload); // Log payload to verify token is valid
+      const secret = new TextEncoder().encode(process.env.JWT_SECRET); // JWT secret from env variable
       
-      // Check for additional conditions here if needed (e.g., role-based access)
+      if (!process.env.JWT_SECRET) {
+        console.error('JWT_SECRET is not set in production.');
+        throw new Error('Missing JWT secret');
+      }
+
+      // Verifies and decodes the token payload
+      const { payload }: { payload: JWTPayload } = await jwtVerify(token, secret);
+      
+      console.log("Token is valid, payload:", payload);
+
+      // Check for any additional conditions like expiration, roles, etc. here if needed
     } catch (err: any) {
-      // Handle token errors: either it's expired or invalid
+      // Handle token errors: expired, invalid, etc.
+      console.log('Error verifying token:', err.message);
+
       if (err.code === 'ERR_JWT_EXPIRED') {
         console.log('Token expired, redirecting to login.');
       } else {
-        console.log('Token invalid, redirecting to login:', err);
+        console.log('Token invalid or error in token verification, redirecting to login.');
       }
-      return NextResponse.redirect(new URL('/login', req.url)); // Redirect if token is expired or invalid
+      
+      // Redirect to login if token is invalid or expired
+      return NextResponse.redirect(new URL('/login', req.url));
     }
   }
 
-  // Allow access if the token is valid
+  // If the token is valid or it's a non-protected route, allow the request to proceed
   return NextResponse.next();
 }
 
-// Apply middleware to the profile route and any other protected routes
+// Apply middleware to protected routes (add more routes if necessary)
 export const config = {
-  matcher: ['/profile', '/event'], // Add other protected routes here
+  matcher: ['/profile', '/event'], // Protect these routes
 };
