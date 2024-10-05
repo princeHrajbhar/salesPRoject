@@ -1,11 +1,20 @@
-// app/page.tsx
+"use client"
+import React from 'react';
+import Home from '@/components/Home'
+import Anime1 from '@/components/Hero1Anime'
+import ReelAid from '@/components/AppleCardsCarouselDemo'
+import Anime2 from '@/components/Hero2Anime'
 
-export default function Home() {
-    return (
-      <div className="text-center">
-        <h1 className="text-3xl font-bold">Welcome to MyApp</h1>
-        <p className="mt-4">An authentication system built with Next.js!</p>
-      </div>
-    );
-  }
-  
+const HomePage = () => {
+  return (
+    <div>
+      <Home/>
+      <Anime1/>
+      <Anime2/>
+      <ReelAid/>
+
+    </div>
+  );
+};
+
+export default HomePage;
