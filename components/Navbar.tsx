@@ -1,15 +1,13 @@
-"use client"; // Keep this if you're using client components
+"use client";
 import Link from "next/link";
-import { useEffect, useState, useRef } from "react"; // Import useRef
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 const Navbar = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // State for mobile menu
-  const [isVisible, setIsVisible] = useState(true); // State to control navbar visibility
   const router = useRouter();
-  const lastScrollY = useRef(0); // Use useRef to store the last scroll position
 
   useEffect(() => {
     // Check for token in local storage
@@ -17,25 +15,6 @@ const Navbar = () => {
     if (token) {
       setIsAuthenticated(true);
     }
-
-    // Scroll event listener to track direction and control navbar visibility
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      if (scrollY > lastScrollY.current) {
-        // User is scrolling down
-        setIsVisible(false);
-      } else {
-        // User is scrolling up
-        setIsVisible(true);
-      }
-      lastScrollY.current = scrollY; // Update the ref value
-    };
-
-    window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll); // Clean up event listener
-    };
   }, []);
 
   const handleLogout = async () => {
@@ -63,15 +42,13 @@ const Navbar = () => {
   };
 
   return (
-    <nav
-      className={`bg-gray-900 p-4 shadow-md fixed w-full z-50 transition-transform duration-300 ${isVisible ? "translate-y-0" : "-translate-y-full"}`} // Navbar transitions based on visibility
-    >
+    <nav className="bg-gray-900 p-4 shadow-md">
       <div className="container mx-auto flex justify-between items-center">
         <div className="hover:text-blue-400 transition duration-300 flex items-center">
           <Link href="/">
             {/* Reduce padding and adjust logo size */}
             <Image
-              src="/logo.png" // Ensure the logo image is in the public folder
+              src="/logo.png" // Make sure the logo image is correctly placed in the public folder
               alt="E-Cell Logo"
               width={40} // Adjust the width and height for appropriate sizing
               height={40}
