@@ -129,7 +129,7 @@ const Navbar = () => {
       {/* Mobile Menu Links */}
       {isMobileMenuOpen && (
         <div className="lg:hidden flex flex-col space-y-2 mt-2">
-          <Link href="/" className="text-white hover:text-blue-400 transition duration-300">
+          <Link href="/home" className="text-white hover:text-blue-400 transition duration-300">
             Home
           </Link>
           <Link href="/event" className="text-white hover:text-blue-400 transition duration-300">
