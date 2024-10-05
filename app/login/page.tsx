@@ -11,7 +11,7 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -24,12 +24,18 @@ export default function Login() {
       setLoading(true);
       const response = await axios.post('/api/login', { email, password });
       setLoading(false);
-      
+
       const { token } = response.data;
-      localStorage.setItem('token', token); // Store token in localStorage
-      Cookies.set('token', token);
+
+      // Store token in both localStorage and a secure cookie with SameSite and Secure options
+      localStorage.setItem('token', token);
+      Cookies.set('token', token, { secure: true, sameSite: 'None' });
 
       toast.success('Login successful!');
+      
+      // Add Authorization header for future API calls
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
       router.push('/home');
     } catch (error) {
       setLoading(false);
@@ -72,9 +78,7 @@ export default function Login() {
           </div>
           <button
             type="submit"
-            className={`w-full bg-blue-600 text-white p-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors ${
-              loading ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
+            className={`w-full bg-blue-600 text-white p-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
             disabled={loading}
           >
             {loading ? 'Logging in...' : 'Login'}
