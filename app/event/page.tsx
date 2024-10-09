@@ -1,11 +1,12 @@
-// app/event/page.tsx
+// pages/event.tsx
+import React from 'react';
+const EventPage = () => {
+  return (
+    <div>
+      event
+    </div>
+    
+  );
+};
 
-export default function Event() {
-    return (
-      <div>
-        <h1 className="text-2xl font-bold">Events</h1>
-        <p>List of upcoming events...</p>
-      </div>
-    );
-  }
-  
+export default EventPage;

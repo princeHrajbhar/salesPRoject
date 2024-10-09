@@ -88,7 +88,7 @@ const Navbar = () => {
 
         {/* Links */}
         <div className={`hidden lg:flex space-x-4 ${isMobileMenuOpen ? "flex flex-col mt-2" : ""}`}>
-          <Link href="/" className="text-white hover:text-blue-400 transition duration-300">
+          <Link href="/home" className="text-white hover:text-blue-400 transition duration-300">
             Home
           </Link>
           <Link href="/event" className="text-white hover:text-blue-400 transition duration-300">
@@ -97,6 +97,7 @@ const Navbar = () => {
           <Link href="/team" className="text-white hover:text-blue-400 transition duration-300">
             Team
           </Link>
+          
 
           {isAuthenticated ? (
             <>
@@ -138,6 +139,7 @@ const Navbar = () => {
           <Link href="/team" className="text-white hover:text-blue-400 transition duration-300">
             Team
           </Link>
+         
 
           {isAuthenticated ? (
             <>

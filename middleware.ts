@@ -11,7 +11,7 @@ export async function middleware(req: NextRequest) {
   }
 
   // If no token exists and the route is protected, redirect to login
-  if (req.nextUrl.pathname === '/dashboard' && !token) {
+  if (req.nextUrl.pathname === '/profile' && !token) {
     console.log('Redirecting to login, no token found.');
     return NextResponse.redirect(new URL('/login', req.url));
   }
@@ -53,5 +53,5 @@ export async function middleware(req: NextRequest) {
 
 // Apply middleware to protected routes (add more routes if necessary)
 export const config = {
-  matcher: ['/dashboard', '/admin'], // Protect these routes
+  matcher: ['/profile', '/admin'], // Protect these routes
 };

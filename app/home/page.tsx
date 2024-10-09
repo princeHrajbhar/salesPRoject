@@ -12,7 +12,8 @@ const HomePage = () => {
       <Anime1/>
       <Anime2/>
       <ReelAid/>
-
+      <div className="flex justify-center items-center h-screen bg-gray-200">
+    </div>
     </div>
   );
 };
