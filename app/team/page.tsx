@@ -1,9 +1,11 @@
+"use client"
+import TeamMemberCard from '@/components/TeamMember/MemberCard';
 import React from 'react';
 
 const TeamPage = () => {
   return (
     <div>
-      Team Structure
+      <TeamMemberCard/>
     </div>
   );
 };
