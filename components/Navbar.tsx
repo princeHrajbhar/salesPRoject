@@ -97,6 +97,9 @@ const Navbar = () => {
           <Link href="/team" className="text-white hover:text-blue-400 transition duration-300">
             Team
           </Link>
+          <Link href="/member" className="text-white hover:text-blue-400 transition duration-300">
+            Members
+          </Link>
           
 
           {isAuthenticated ? (

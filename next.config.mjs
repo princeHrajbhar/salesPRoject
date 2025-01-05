@@ -4,7 +4,8 @@ const nextConfig = {
     domains: [
       'images.unsplash.com',
       'images.pexels.com',
-      'images.app.goo.gl', // Add this line
+      'images.app.goo.gl',
+      'res.cloudinary.com', // Make sure this line exists
     ],
   },
 };
