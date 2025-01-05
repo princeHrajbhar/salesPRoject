@@ -1,28 +1,28 @@
-"use client";  // Required for useEffect to work in Next.js 13+
+"use client"; // Required for useEffect to work in Next.js 13+
 
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
 const KommunicateChat: React.FC = () => {
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      (function (d, m) {
+    if (typeof window !== "undefined") {
+      (function (d: Document, m: Record<string, unknown>) {
         const kommunicateSettings = {
-          appId: '1419b11cf8789508fac6e3593e146bd1b', // Replace with your App ID
+          appId: "1419b11cf8789508fac6e3593e146bd1", // Replace with your App ID
           popupWidget: true,
           automaticChatOpenOnNavigation: true,
         };
 
-        const s = document.createElement('script');
-        s.type = 'text/javascript';
+        const s = d.createElement("script");
+        s.type = "text/javascript";
         s.async = true;
-        s.src = 'https://widget.kommunicate.io/v2/kommunicate.app';
+        s.src = "https://widget.kommunicate.io/v2/kommunicate.app";
 
-        const h = document.getElementsByTagName('head')[0];
+        const h = d.getElementsByTagName("head")[0];
         h.appendChild(s);
 
-        (window as any).kommunicate = m;
+        (window as typeof window & { kommunicate: Record<string, unknown> }).kommunicate = m;
         m._globals = kommunicateSettings;
-      })(document, (window as any).kommunicate || {});
+      })(document, (window as typeof window & { kommunicate: Record<string, unknown> }).kommunicate || {});
     }
   }, []);
 
@@ -30,7 +30,6 @@ const KommunicateChat: React.FC = () => {
 };
 
 export default KommunicateChat;
-
 
 
 
