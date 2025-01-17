@@ -9,17 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^6.6.0",
-    "@fortawesome/free-brands-svg-icons": "^6.6.0",
-    "@fortawesome/react-fontawesome": "^0.2.2",
-    "@hookform/resolvers": "^3.9.0",
-    "@kommunicate/kommunicate-chatbot-plugin": "^0.0.7",
-    "@radix-ui/react-alert-dialog": "^1.1.2",
-    "@radix-ui/react-label": "^2.1.0",
-    "@radix-ui/react-separator": "^1.1.0",
-    "@radix-ui/react-slot": "^1.1.0",
-    "@tabler/icons-react": "^3.19.0",
-    "@tanstack/react-table": "^8.20.5",
     "@types/express": "^5.0.0",
     "axios": "^1.7.7",
     "bcryptjs": "^2.4.3",
