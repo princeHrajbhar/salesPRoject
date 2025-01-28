@@ -2,3 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+.loader {
+    border-width: 2px;
+  }
+  

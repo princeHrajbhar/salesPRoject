@@ -1,6 +1,8 @@
-"use client"; // Mark this file as a Client Component
-
+"use client"
 import React, { useState } from "react";
+import Button from "@/components/custom ui/Button"; // Ensure the correct path for the Button component
+import Loader from "@/components/custom ui/Loader"; // Ensure the correct path for the Loader component
+import Image from "next/image"; // Import the Image component from Next.js
 
 // Define the Member type
 interface Member {
@@ -41,76 +43,81 @@ const MembersPage = () => {
   };
 
   return (
-    <div className="container mx-auto py-8">
-      <h1 className="text-3xl font-bold text-center mb-6">E-Cell Members</h1>
+    <div className="min-h-screen bg-white text-black flex flex-col items-center py-8">
+      <h1 className="text-3xl font-bold mb-6">E-Cell Members</h1>
 
       {/* Button to load data */}
       <div className="text-center mb-6">
-        <button
+        <Button
+          text={loading ? "Loading..." : "Load Members Data"}
           onClick={fetchMembers}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-          {loading ? "Loading..." : "Load Members Data"}
-        </button>
+        />
       </div>
 
       {/* Members Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {members.length > 0 ? (
-          members.map((member) => (
-            <div
-              key={member._id}
-              className="bg-white shadow-md rounded-lg overflow-hidden"
-            >
-              <img
-                src={member.image_url}
-                alt={member.name}
-                className="w-full h-48 object-cover"
-              />
-              <div className="p-4">
-                <h2 className="text-xl font-semibold mb-2">{member.name}</h2>
-                <p className="text-sm text-gray-600 mb-1">
-                  <strong>Position:</strong> {member.position}
-                </p>
-                <p className="text-sm text-gray-600 mb-1">
-                  <strong>Email:</strong> {member.email}
-                </p>
-                <p className="text-sm text-gray-600 mb-3">
-                  <strong>Description:</strong> {member.description}
-                </p>
-                <div className="flex justify-between">
-                  <a
-                    href={member.portfolio_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-500 hover:underline"
-                  >
-                    Portfolio
-                  </a>
-                  <a
-                    href={member.git_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-500 hover:underline"
-                  >
-                    GitHub
-                  </a>
-                  <a
-                    href={member.linkdin_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-500 hover:underline"
-                  >
-                    LinkedIn
-                  </a>
+      {loading ? (
+        <Loader /> // Display Loader while data is fetching
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {members.length > 0 ? (
+            members.map((member) => (
+              <div
+                key={member._id}
+                className="bg-gray-100 text-black shadow-md rounded-lg overflow-hidden"
+              >
+                {/* Image component */}
+                <Image
+                  src={member.image_url}
+                  alt={member.name}
+                  width={500} // Set the width as required
+                  height={300} // Set the height as required
+                  className="w-full h-48 object-cover"
+                />
+                <div className="p-4">
+                  <h2 className="text-xl font-semibold mb-2">{member.name}</h2>
+                  <p className="text-sm text-gray-800 mb-1">
+                    <strong>Position:</strong> {member.position}
+                  </p>
+                  <p className="text-sm text-gray-800 mb-1">
+                    <strong>Email:</strong> {member.email}
+                  </p>
+                  <p className="text-sm text-gray-800 mb-3">
+                    <strong>Description:</strong> {member.description}
+                  </p>
+                  <div className="flex justify-between">
+                    <a
+                      href={member.portfolio_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-500 hover:underline"
+                    >
+                      Portfolio
+                    </a>
+                    <a
+                      href={member.git_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-500 hover:underline"
+                    >
+                      GitHub
+                    </a>
+                    <a
+                      href={member.linkdin_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-500 hover:underline"
+                    >
+                      LinkedIn
+                    </a>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))
-        ) : (
-          <p className="text-center text-gray-600">No members to display</p>
-        )}
-      </div>
+            ))
+          ) : (
+            <p className="text-center text-gray-600">No members to display</p>
+          )}
+        </div>
+      )}
     </div>
   );
 };

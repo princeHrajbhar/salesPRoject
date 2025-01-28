@@ -92,10 +92,11 @@ export const POST = async (req: NextRequest) => {
 
 
 // GET function (optimized with pagination and indexes)
+// GET function (optimized with pagination and indexes)
 export const GET = async (req: NextRequest) => {
   try {
-    // Connect to MongoDB
-    await  connectToDatabase ();
+    // Connect to MongoDB with retry logic
+    await retryConnectToDatabase();
 
     const url = new URL(req.url);
     const page = parseInt(url.searchParams.get("page") || "1", 10);
@@ -105,13 +106,17 @@ export const GET = async (req: NextRequest) => {
     const members = await MemberModel.find()
       .skip((page - 1) * limit)
       .limit(limit)
-      .lean(); // `.lean()` for performance improvement (no Mongoose overhead)
+      .lean();
+
+    // Get the total count of members
+    const totalCount = await MemberModel.countDocuments();
 
     if (members.length === 0) {
-      return NextResponse.json({ message: "No members found" }, { status: 404 });
+      return NextResponse.json({ message: "No members found", totalCount: 0 }, { status: 404 });
     }
 
-    return NextResponse.json({ data: members }, { status: 200 });
+    // Return the data along with totalCount for pagination
+    return NextResponse.json({ data: members, totalCount }, { status: 200 });
   } catch (error) {
     console.error("Error in GET /api/member:", error);
     return NextResponse.json(
@@ -121,5 +126,14 @@ export const GET = async (req: NextRequest) => {
   }
 };
 
-
-
+// Retry logic for MongoDB connection
+const retryConnectToDatabase = async (retries = 5, delay = 5000) => {
+  try {
+    await connectToDatabase();
+  } catch (error) {
+    if (retries === 0) throw error;
+    console.log(`Retrying connection... (${retries} retries left)`);
+    await new Promise((resolve) => setTimeout(resolve, delay));
+    await retryConnectToDatabase(retries - 1, delay);
+  }
+};

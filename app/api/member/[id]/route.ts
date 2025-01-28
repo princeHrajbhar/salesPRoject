@@ -32,46 +32,6 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   }
 }
 
-export async function DELETE(req: NextRequest, context: { params: { id: string } }) {
-  try {
-    // Awaiting params to avoid the sync-dynamic-apis issue
-    const { id } = await context.params; // Await the params
-
-    if (!isValidObjectId(id)) {
-      return NextResponse.json({ error: "Invalid Member ID." }, { status: 400 });
-    }
-
-    await  connectToDatabase ();
-
-    const member = await MemberModel.findById(id);
-    if (!member) {
-      return NextResponse.json({ error: "Member not found." }, { status: 404 });
-    }
-
-    if (member.public_id) {
-      try {
-        const cloudinaryResult = await DeleteImage(member.public_id);
-        if (cloudinaryResult.result !== "ok") {
-          return NextResponse.json({ error: "Failed to delete image from Cloudinary." }, { status: 500 });
-        }
-      } catch (error) {
-        console.error("Error deleting image from Cloudinary:", error);
-        return NextResponse.json({ error: "Error deleting image from Cloudinary." }, { status: 500 });
-      }
-    }
-
-    await MemberModel.findByIdAndDelete(id);
-
-    return NextResponse.json({ message: "Member deleted successfully." }, { status: 200 });
-  } catch (error) {
-    console.error("Error in DELETE /api/member/[id]:", error);
-    return NextResponse.json({ error: "Internal server error." }, { status: 500 });
-  }
-}
-
-
-
-
 // PUT function (for updating existing members)
 export const PUT = async (req: NextRequest, context: { params: { id: string } }) => {
   try {
@@ -175,3 +135,43 @@ export const PUT = async (req: NextRequest, context: { params: { id: string } })
     );
   }
 };
+
+
+
+export async function DELETE(req: NextRequest, context: { params: { id: string } }) {
+  try {
+    // Awaiting params to avoid the sync-dynamic-apis issue
+    const { id } = await context.params; // Await the params
+
+    if (!isValidObjectId(id)) {
+      return NextResponse.json({ error: "Invalid Member ID." }, { status: 400 });
+    }
+
+    await  connectToDatabase ();
+
+    const member = await MemberModel.findById(id);
+    if (!member) {
+      return NextResponse.json({ error: "Member not found." }, { status: 404 });
+    }
+
+    if (member.public_id) {
+      try {
+        const cloudinaryResult = await DeleteImage(member.public_id);
+        if (cloudinaryResult.result !== "ok") {
+          return NextResponse.json({ error: "Failed to delete image from Cloudinary." }, { status: 500 });
+        }
+      } catch (error) {
+        console.error("Error deleting image from Cloudinary:", error);
+        return NextResponse.json({ error: "Error deleting image from Cloudinary." }, { status: 500 });
+      }
+    }
+
+    await MemberModel.findByIdAndDelete(id);
+
+    return NextResponse.json({ message: "Member deleted successfully." }, { status: 200 });
+  } catch (error) {
+    console.error("Error in DELETE /api/member/[id]:", error);
+    return NextResponse.json({ error: "Internal server error." }, { status: 500 });
+  }
+}
+
